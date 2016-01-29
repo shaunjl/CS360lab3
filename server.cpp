@@ -152,7 +152,7 @@ int main(int argc, char* argv[])
    long t;
    for(t=0; t<numThreads; t++){
       printf("In main: creating thread %ld\n", t);
-      rc = pthread_create(&threads[t], NULL, acceptRequest, void *(*hServerSocket) (void *));
+      rc = pthread_create(&threads[t], NULL, acceptRequest, (void *)hServerSocket);
       if (rc){
          printf("ERROR; return code from pthread_create() is %d\n", rc);
          exit(-1);
