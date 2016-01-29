@@ -7,5 +7,5 @@ git_local:
 	git push origin master
 git_remote: server.cpp
 	git stash save
-	git pull
+	git pull origin master
 	git stash drop
