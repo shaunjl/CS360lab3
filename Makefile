@@ -9,4 +9,3 @@ git_remote: server.cpp
 	git stash save
 	git pull
 	git stash drop
-	g++ -o server server.cpp

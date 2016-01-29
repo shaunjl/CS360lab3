@@ -21,7 +21,6 @@
 #define BUFFER_SIZE         10000
 #define QUEUE_SIZE           5
 #define STR_SIZE            150
-#define NUM_THREADS          20
 
 std::queue<int> socketqueue;
 
@@ -65,7 +64,7 @@ void acceptRequest(void * ss_void)
 
 int main(int argc, char* argv[])
 {
-    int hSocket,hServerSocket;  /* handle to socket */
+    int hSocket,hServerSocket, numThreads;  /* handle to socket */
     struct hostent* pHostInfo;   /* holds info about a machine */
     struct sockaddr_in Address; /* Internet socket address stuct */
     int nAddressSize=sizeof(struct sockaddr_in);
@@ -75,15 +74,16 @@ int main(int argc, char* argv[])
     unsigned nReadAmount;
     void handler (int status); 
 
-    if(argc < 3)
+    if(argc < 4)
       {
-        printf("\nUsage: server host-port dir\n");
+        printf("\nUsage: server <host-port> <num-threads> <dir>\n");
         return 0;
       }
     else
       {
         nHostPort=atoi(argv[1]);
-        strcpy(strBaseDir,argv[2]);
+        numThreads=atoi(argv[2]);
+        strcpy(strBaseDir,argv[3]);
       }
 
     printf("\nStarting server");
@@ -147,10 +147,10 @@ int main(int argc, char* argv[])
     sigaction(SIGPIPE,&signew,&sigold);
     sigaction(SIGHUP,&signew,&sigold);
 
-   pthread_t threads[NUM_THREADS];
+   pthread_t threads[numThreads];
    int rc;
    long t;
-   for(t=0; t<NUM_THREADS; t++){
+   for(t=0; t<numThreads; t++){
       printf("In main: creating thread %ld\n", t);
       rc = pthread_create(&threads[t], NULL, acceptRequest, (void *)hServerSocket);
       if (rc){
