@@ -24,7 +24,7 @@
 
 std::queue<int> socketqueue;
 
-void acceptRequest(void * ss_void)
+void* acceptRequest(void * ss_void)
 {
     int hSocket, hServerSocket;  /* handle to socket */
     hSocket = socketqueue.front();
