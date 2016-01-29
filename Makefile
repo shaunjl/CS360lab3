@@ -1,6 +1,6 @@
 all: server
 server: server.cpp
-	g++ -o -g server server.cpp -pthread
+	g++ -o server server.cpp -pthread
 git_local:
 	git add .
 	git commit -m "dev"
