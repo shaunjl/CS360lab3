@@ -43,8 +43,10 @@ int main (int argc, char *argv[])
       sockqueue.push(i);
    }
    for(int i = 0; i < 10; i++){
-      sockqueue.pop();
+      std::cout<<"Got "<<sockqueue.pop()<<std::endl;
    }
+
+   exit(0);
 
    for(t=0; t<NUM_THREADS; t++){
       printf("In main: creating thread %ld\n", t);
