@@ -40,7 +40,6 @@ void *PrintHello(void *arg)
 // get socket from the queue
 //read request
 //respond
-   printf("Hello World! It's me, thread #%ld!\n", tid);
    std::cout<<"Got "<<sockqueue.pop()<<std::endl;
    
 }
