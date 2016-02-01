@@ -3,18 +3,30 @@
 #include <stdlib.h>
 #include <queue>
 #include <iostream>
+#include <semaphore.h>
 
-#define NUM_THREADS     20
+#define NUM_THREADS     10
+#define NUM_QUEUE       20
+
+sem_t full, empty, mutex;
 
 class socketqueue {
    std::queue<int> stlqueue;
 public:
    void push(int sock){
+      sem_wait(&empty);
+      sem_wait(&mutex);
       stlqueue.push(sock);
+      sem_post(&mutex);
+      sem_post(&full);
    }
    int pop(){
+      sem_wait(&full);
+      sem_wait(&mutex);
       int rval = stlqueue.front();
       stlqueue.pop();
+      sem_post(&mutex);
+      sem_post(&empty);
       return(rval);
    }
 
@@ -37,6 +49,9 @@ void *PrintHello(void *threadid)
 int main (int argc, char *argv[])
 {
    pthread_t threads[NUM_THREADS];
+   sem_init(&full, PTHREAD_PROCESS_PRIVATE, 0);
+   sem_init(&empty, PTHREAD_PROCESS_PRIVATE, NUM_QUEUE);
+   sem_init(&mutex, PTHREAD_PROCESS_PRIVATE, 1);
    int rc;
    long t;
    for(int i = 0; i < 10; i++){
