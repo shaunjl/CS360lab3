@@ -4,6 +4,9 @@
 #include <unistd.h>
 #include <semaphore.h>
 
+
+//This uses semaphores and works
+
 void *functionC(void *ptr);
 int  counter = 0;
 sem_t sem;
