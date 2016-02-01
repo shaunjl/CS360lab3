@@ -34,16 +34,15 @@ public:
 
 //also see slides to know what to do
 
-void *PrintHello(void *threadid)
+void *PrintHello(void *arg)
 {
 //for((;;)
 // get socket from the queue
 //read request
 //respond
-   long tid;
-   tid = (long)threadid;
    printf("Hello World! It's me, thread #%ld!\n", tid);
-   pthread_exit(NULL);
+   std::cout<<"Got "<<sockqueue.pop()<<std::endl;
+   
 }
 
 int main (int argc, char *argv[])
@@ -57,15 +56,10 @@ int main (int argc, char *argv[])
    for(int i = 0; i < 10; i++){
       sockqueue.push(i);
    }
-   for(int i = 0; i < 10; i++){
-      std::cout<<"Got "<<sockqueue.pop()<<std::endl;
-   }
-
-   exit(0);
 
    for(t=0; t<NUM_THREADS; t++){
       printf("In main: creating thread %ld\n", t);
-      rc = pthread_create(&threads[t], NULL, PrintHello, (void *)t);
+      rc = pthread_create(&threads[t], NULL, PrintHello, NULL;
       if (rc){
          printf("ERROR; return code from pthread_create() is %d\n", rc);
          exit(-1);
