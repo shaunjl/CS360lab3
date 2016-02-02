@@ -41,6 +41,7 @@ void *acceptRequest(void* ss_void)
 // get socket from the queue
 //read request
 //respond
+   int hSocket, hServerSocket;
    hServerSocket = (int)(size_t) ss_void;
    std::cout<<"Got "<<sockqueue.pop()<<std::endl;
    std::cout<<"HserverSocket: "<<hServerSocket<<std::endl;
@@ -49,6 +50,7 @@ void *acceptRequest(void* ss_void)
 
 int main (int argc, char *argv[])
 {
+   int hServerSocket = 4;
    pthread_t threads[NUM_THREADS];
    sem_init(&full, PTHREAD_PROCESS_PRIVATE, 0);
    sem_init(&empty, PTHREAD_PROCESS_PRIVATE, NUM_QUEUE);
