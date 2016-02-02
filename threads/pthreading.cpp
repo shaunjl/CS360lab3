@@ -5,6 +5,7 @@
 #include <iostream>
 #include <semaphore.h>
 
+
 #define NUM_THREADS     10
 #define NUM_QUEUE       20
 
@@ -34,13 +35,15 @@ public:
 
 //also see slides to know what to do
 
-void *PrintHello(void *arg)
+void *acceptRequest(void* ss_void)
 {
 //for((;;)
 // get socket from the queue
 //read request
 //respond
+   hServerSocket = (int)(size_t) ss_void;
    std::cout<<"Got "<<sockqueue.pop()<<std::endl;
+   std::cout<<"HserverSocket: "<<hServerSocket<<std::endl;
    
 }
 
@@ -58,7 +61,7 @@ int main (int argc, char *argv[])
 
    for(t=0; t<NUM_THREADS; t++){
       printf("In main: creating thread %ld\n", t);
-      rc = pthread_create(&threads[t], NULL, PrintHello, NULL);
+      rc = pthread_create(&threads[t], NULL, acceptRequest, (void *)hServerSocket);
       if (rc){
          printf("ERROR; return code from pthread_create() is %d\n", rc);
          exit(-1);
