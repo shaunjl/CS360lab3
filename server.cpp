@@ -59,7 +59,7 @@ void *acceptRequest(void* args_void)
     int hSocket, hServerSocket;    
     char pBuffer[BUFFER_SIZE];
     char strBaseDir[STR_SIZE];
-    struct arg_struct *args = args_void;
+    struct arg_struct *args = (struct arg_struct *)args;
     //hServerSocket = (int)(size_t) ss_void;
     hServerSocket = args.hServerSocket;
     strBaseDir = args.strBaseDir;
