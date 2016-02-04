@@ -61,7 +61,7 @@ void *acceptRequest(void* args_void)
     char strBaseDir[STR_SIZE];
     struct arg_struct *args = (struct arg_struct *)args;
     //hServerSocket = (int)(size_t) ss_void;
-    hServerSocket = args->hServerSocket;
+    hServerSocket = (int)args->hServerSocket;
     strcpy(strBaseDir, args->strBaseDir);
     for (;;) {
         hSocket = sockqueue.pop();
