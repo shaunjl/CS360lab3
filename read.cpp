@@ -19,6 +19,7 @@ using namespace std;
 // for jpg use mclement.us/jpg.c
 //compare filesize of jpg to 51793
 
+
 bool compare_nocase (const std::string& first, const std::string& second)
 {
   unsigned int i=0;
