@@ -52,13 +52,11 @@ public:
 
 void *acceptRequest(void* ss_void)
 {
+    char pBuffer[BUFFER_SIZE];
     int hSocket, hServerSocket;
     hServerSocket = (int)(size_t) ss_void;
     for (;;) {
         hSocket = sockqueue.pop();
-        printf("\nGot a connection from %X (%d)\n",
-               Address.sin_addr.s_addr,
-               ntohs(Address.sin_port));
         memset(pBuffer, 0, sizeof(pBuffer));
         int rval = read(hSocket, pBuffer, BUFFER_SIZE);
         printf("Got from browser %d\n%s\n", rval, pBuffer);
@@ -67,7 +65,8 @@ void *acceptRequest(void* ss_void)
         rval = sscanf(pBuffer, "GET %s HTTP/1.1", path);
         printf("Got rval %d, path %s\n", rval, path);
         char fullpath[MAXPATH];
-        sprintf(fullpath, "%s%s", strBaseDir, path);
+        // TODO- pass in base directory
+        sprintf(fullpath, "%s%s", '/', path);
         printf("fullpath %s\n", fullpath);
         respond(hSocket, fullpath, path);
         /* close socket */
@@ -177,7 +176,7 @@ int main(int argc, char* argv[])
     sigaction(SIGPIPE, &signew, &sigold);
     sigaction(SIGHUP, &signew, &sigold);
 
-    for (t = 0; t < NUM_THREADS; t++) {
+    for (t = 0; t < numThreads; t++) {
         printf("In main: creating thread %ld\n", t);
         rc = pthread_create(&threads[t], NULL, acceptRequest, (void *)hServerSocket);
         if (rc) {
