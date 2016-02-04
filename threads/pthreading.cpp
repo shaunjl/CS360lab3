@@ -37,14 +37,37 @@ public:
 
 void *acceptRequest(void* ss_void)
 {
-//for((;;)
-// get socket from the queue
-//read request
-//respond
    int hSocket, hServerSocket;
    hServerSocket = (int)(size_t) ss_void;
-   std::cout<<"Got "<<sockqueue.pop()<<std::endl;
-   std::cout<<"HserverSocket: "<<hServerSocket<<std::endl;
+   for(;;){
+      hSocket = sockqueue.pop();
+              printf("\nGot a connection from %X (%d)\n",
+              Address.sin_addr.s_addr,
+              ntohs(Address.sin_port));
+     memset(pBuffer,0,sizeof(pBuffer));
+     int rval = read(hSocket,pBuffer,BUFFER_SIZE);
+     printf("Got from browser %d\n%s\n",rval, pBuffer);
+ #define MAXPATH 1000
+     char path[MAXPATH];
+     rval = sscanf(pBuffer,"GET %s HTTP/1.1",path);
+     printf("Got rval %d, path %s\n",rval,path);
+     char fullpath[MAXPATH];
+     sprintf(fullpath,"%s%s",strBaseDir, path);
+     printf("fullpath %s\n",fullpath);
+     respond(hSocket, fullpath, path);
+     /* close socket */
+     linger lin;
+     unsigned int y=sizeof(lin);
+     lin.l_onoff=1;
+     lin.l_linger=10;
+     setsockopt(hServerSocket, SOL_SOCKET, SO_LINGER,&lin,sizeof(lin));
+     shutdown(hSocket, SHUT_RDWR);
+     if(close(hSocket) == SOCKET_ERROR)
+     {
+      printf("\nCould not close socket\n");
+      return 0;
+        }
+   }
    
 }
 
@@ -57,10 +80,6 @@ int main (int argc, char *argv[])
    sem_init(&mutex, PTHREAD_PROCESS_PRIVATE, 1);
    int rc;
    long t;
-   for(int i = 0; i < 10; i++){
-      sockqueue.push(i);
-   }
-
    for(t=0; t<NUM_THREADS; t++){
       printf("In main: creating thread %ld\n", t);
       rc = pthread_create(&threads[t], NULL, acceptRequest, (void *)hServerSocket);
@@ -70,11 +89,10 @@ int main (int argc, char *argv[])
       }
    }
    
-//set up socket, bind, listen
-//for(;;) {
-//  fd = accept
-//put fd in queue
-//}
+   for(;;){
+      hSocket=accept(hServerSocket,(struct sockaddr*)&Address,(socklen_t *)&nAddressSize);
+      sockqueue.push(hSocket);
+   }
 
    /* Last thing that main() should do */
    pthread_exit(NULL);
