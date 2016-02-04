@@ -189,6 +189,8 @@ int main(int argc, char* argv[])
     args_in.hServerSocket = hServerSocket;
     strcpy(args_in.strBaseDir, strBaseDir);
 
+    printf("args in is set to:\nServer socket: %d\nBase Directory:%s\n", args_in.hServerSocket, args_in.strBaseDir);
+
     for (t = 0; t < numThreads; t++) {
         printf("In main: creating thread %ld\n", t);
         rc = pthread_create(&threads[t], NULL, acceptRequest, (void *)&args_in);
