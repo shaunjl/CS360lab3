@@ -62,7 +62,7 @@ void *acceptRequest(void* args_void)
     struct arg_struct *args = (struct arg_struct *)args;
     //hServerSocket = (int)(size_t) ss_void;
     hServerSocket = args->hServerSocket;
-    strBaseDir = args->strBaseDir;
+    strcpy(strBaseDir, args->strBaseDir);
     for (;;) {
         hSocket = sockqueue.pop();
 
@@ -191,7 +191,7 @@ int main(int argc, char* argv[])
 
     for (t = 0; t < numThreads; t++) {
         printf("In main: creating thread %ld\n", t);
-        rc = pthread_create(&threads[t], NULL, acceptRequest, (void *)args_in);
+        rc = pthread_create(&threads[t], NULL, acceptRequest, (void *)&args_in);
         if (rc) {
             printf("ERROR; return code from pthread_create() is %d\n", rc);
             exit(-1);
