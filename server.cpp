@@ -49,14 +49,23 @@ public:
 
 } sockqueue;
 
+struct arg_struct {
+    int hServerSocket;
+    char strBaseDir[STR_SIZE];
+};
 
-void *acceptRequest(void* ss_void)
+void *acceptRequest(void* args_void)
 {
+    int hSocket, hServerSocket;    
     char pBuffer[BUFFER_SIZE];
-    int hSocket, hServerSocket;
-    hServerSocket = (int)(size_t) ss_void;
+    char strBaseDir[STR_SIZE];
+    args = (arg_struct) args_void;
+    //hServerSocket = (int)(size_t) ss_void;
+    hServerSocket = args.hServerSocket;
+    strBaseDir = args.strBaseDir;
     for (;;) {
         hSocket = sockqueue.pop();
+
         memset(pBuffer, 0, sizeof(pBuffer));
         int rval = read(hSocket, pBuffer, BUFFER_SIZE);
         printf("Got from browser %d\n%s\n", rval, pBuffer);
@@ -66,7 +75,7 @@ void *acceptRequest(void* ss_void)
         printf("Got rval %d, path %s\n", rval, path);
         char fullpath[MAXPATH];
         // TODO- pass in base directory
-        sprintf(fullpath, "%s%s", '/', path);
+        sprintf(fullpath, "%s%s", strBaseDir, path);
         printf("fullpath %s\n", fullpath);
         respond(hSocket, fullpath, path);
         /* close socket */
@@ -176,9 +185,13 @@ int main(int argc, char* argv[])
     sigaction(SIGPIPE, &signew, &sigold);
     sigaction(SIGHUP, &signew, &sigold);
 
+    arg_struct args_in;
+    args_in.hServerSocket = hServerSocket;
+    args_in.strBaseDir = strBaseDir;
+
     for (t = 0; t < numThreads; t++) {
         printf("In main: creating thread %ld\n", t);
-        rc = pthread_create(&threads[t], NULL, acceptRequest, (void *)hServerSocket);
+        rc = pthread_create(&threads[t], NULL, acceptRequest, (void *)args_in);
         if (rc) {
             printf("ERROR; return code from pthread_create() is %d\n", rc);
             exit(-1);
