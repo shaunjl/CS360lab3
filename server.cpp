@@ -49,19 +49,13 @@ public:
 
 } sockqueue;
 
-struct arg_struct {
-    int hServerSocket;
-    char strBaseDir[STR_SIZE];
-};
-
-void *acceptRequest(void* args_void)
+void *acceptRequest(void* base_void)
 {
     int hSocket, hServerSocket;    
+    hServerSocket = 1;
     char pBuffer[BUFFER_SIZE];
     char strBaseDir[STR_SIZE];
-    struct arg_struct args = (struct arg_struct )args;
-    //hServerSocket = (int)(size_t) ss_void;
-    strcpy(strBaseDir, args.strBaseDir);
+    strcpy(strBaseDir, (char *) base_void);
     hServerSocket = (int)args.hServerSocket;
     for (;;) {
         hSocket = sockqueue.pop();
@@ -74,7 +68,6 @@ void *acceptRequest(void* args_void)
         rval = sscanf(pBuffer, "GET %s HTTP/1.1", path);
         printf("Got rval %d, path %s\n", rval, path);
         char fullpath[MAXPATH];
-        // TODO- pass in base directory
         sprintf(fullpath, "%s%s", strBaseDir, path);
         printf("fullpath %s\n", fullpath);
         respond(hSocket, fullpath, path);
@@ -185,13 +178,9 @@ int main(int argc, char* argv[])
     sigaction(SIGPIPE, &signew, &sigold);
     sigaction(SIGHUP, &signew, &sigold);
 
-    struct arg_struct args_in;
-    args_in.hServerSocket = hServerSocket;
-    strcpy(args_in.strBaseDir, strBaseDir);
-
     for (t = 0; t < numThreads; t++) {
         printf("In main: creating thread %ld\n", t);
-        rc = pthread_create(&threads[t], NULL, acceptRequest, (void *)&args_in);
+        rc = pthread_create(&threads[t], NULL, acceptRequest, (void *)&strBaseDir);
         if (rc) {
             printf("ERROR; return code from pthread_create() is %d\n", rc);
             exit(-1);
