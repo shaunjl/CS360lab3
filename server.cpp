@@ -56,7 +56,6 @@ void *acceptRequest(void* base_void)
     char pBuffer[BUFFER_SIZE];
     char strBaseDir[STR_SIZE];
     strcpy(strBaseDir, (char *) base_void);
-    hServerSocket = (int)args.hServerSocket;
     for (;;) {
         hSocket = sockqueue.pop();
 
