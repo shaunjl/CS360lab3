@@ -56,7 +56,7 @@ void return_file(int hSocket, char * fullpath, struct stat& filestat, char * pBu
 		fclose(fp);	
 	}
 	else if (dot && !strcmp(dot, ".jpg")){
-		sprintf(pBuffer,"HTTP/1.1 200 OK\r\nContent-Type: image/jpg\r\nContent-Length: 51793\r\n\r\n");
+		sprintf(pBuffer,"HTTP/1.1 200 OK\r\nContent-Type: image/jpg\r\nContent-Length:%ld\r\n\r\n", filestat.st_size);
 		write(hSocket,pBuffer, strlen(pBuffer));
 		FILE *fp = fopen(fullpath,"r");
 		char *buffer = (char *)malloc(filestat.st_size + 1);
@@ -66,7 +66,7 @@ void return_file(int hSocket, char * fullpath, struct stat& filestat, char * pBu
 		fclose(fp);
 	}
 	else if (dot && !strcmp(dot, ".gif")){
-		sprintf(pBuffer,"HTTP/1.1 200 OK\r\nContent-Type: image/jpg\r\nContent-Length: 51793\r\n\r\n");
+		sprintf(pBuffer,"HTTP/1.1 200 OK\r\nContent-Type: image/jpg\r\nContent-Length:%ld\r\n\r\n", filestat.st_size);
 		write(hSocket,pBuffer, strlen(pBuffer));
 		FILE *fp = fopen(fullpath,"r");
 		char *buffer = (char *)malloc(filestat.st_size + 1);
