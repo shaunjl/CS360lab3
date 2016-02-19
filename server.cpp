@@ -20,7 +20,7 @@
 
 
 #define SOCKET_ERROR        -1
-#define BUFFER_SIZE         10000
+#define BUFFER_SIZE         100000
 #define QUEUE_SIZE           5
 #define STR_SIZE            150
 #define NUM_QUEUE            20
