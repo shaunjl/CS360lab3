@@ -11,7 +11,7 @@
 #include <cerrno>
 #include <list>
 
-#define BUFFER_SIZE         100000
+#define BUFFER_SIZE         10000
 #define STR_SIZE             150
 
 using namespace std;

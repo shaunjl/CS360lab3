@@ -20,7 +20,7 @@
 
 
 #define SOCKET_ERROR        -1
-#define BUFFER_SIZE         100000
+#define BUFFER_SIZE         10000
 #define QUEUE_SIZE           5
 #define STR_SIZE            150
 #define NUM_QUEUE            20
@@ -164,8 +164,8 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    int optval = 1;
-    setsockopt(hServerSocket, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
+    // int optval = 1;
+    // setsockopt(hServerSocket, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
 
     // First set up the signal handler
     struct sigaction sigold, signew;
