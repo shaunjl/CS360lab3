@@ -74,7 +74,7 @@ void *acceptRequest(void* base_void)
         linger lin;
         unsigned int y = sizeof(lin);
         lin.l_onoff = 1;
-        lin.l_linger = 10;
+        lin.l_linger = 100;
         setsockopt(hServerSocket, SOL_SOCKET, SO_LINGER, &lin, sizeof(lin));
         shutdown(hSocket, SHUT_RDWR);
         if (close(hSocket) == SOCKET_ERROR)
